@@ -9,6 +9,8 @@ import BasketSVG from "./src/components/SVG/Basket";
 import api from "./api";
 import ProductScreen from "./src/screens/ProductScreen";
 import CartScreen from "./src/screens/CartScreen";
+import { Provider } from "react-redux";
+import store from "./store";
 
 const Stack = createStackNavigator();
 api();
@@ -19,36 +21,38 @@ export default function App() {
   };
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={({ navigation }) => ({
-          cardStyle: Style.PagesBcakground,
-          headerStyle: Style.header,
-          headerLeft: () => <TouchableOpacity></TouchableOpacity>,
-          headerTitle: () => (
-            <TouchableOpacity
-              style={Style.headerTitle}
-              onPress={() => navigation.navigate("Home")}
-            >
-              <LogoSVG width={47} />
-            </TouchableOpacity>
-          ),
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={({ navigation }) => ({
+            cardStyle: Style.PagesBcakground,
+            headerStyle: Style.header,
+            headerLeft: () => <TouchableOpacity></TouchableOpacity>,
+            headerTitle: () => (
+              <TouchableOpacity
+                style={Style.headerTitle}
+                onPress={() => navigation.navigate("Home")}
+              >
+                <LogoSVG width={47} />
+              </TouchableOpacity>
+            ),
 
-          headerRight: () => (
-            <TouchableOpacity
-              style={Style.headerButtonBasket}
-              onPress={() => goToCart(navigation)}
-            >
-              <BasketSVG width={Style.headerBasket.width} />
-            </TouchableOpacity>
-          ),
-        })}
-      >
-        <Stack.Screen name="Home" component={MainScreen} />
-        <Stack.Screen name="Product" component={ProductScreen} />
-        <Stack.Screen name="Cart" component={CartScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+            headerRight: () => (
+              <TouchableOpacity
+                style={Style.headerButtonBasket}
+                onPress={() => goToCart(navigation)}
+              >
+                <BasketSVG width={Style.headerBasket.width} />
+              </TouchableOpacity>
+            ),
+          })}
+        >
+          <Stack.Screen name="Home" component={MainScreen} />
+          <Stack.Screen name="Product" component={ProductScreen} />
+          <Stack.Screen name="Cart" component={CartScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
 

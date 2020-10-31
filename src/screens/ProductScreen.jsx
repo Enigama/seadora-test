@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import {
   View,
   Image,
@@ -12,15 +12,25 @@ import useProducts from "../hooks/useProducts";
 import { visueltProBlack } from "../../contants/fontsConstant";
 import { colors } from "../../base-style";
 import InfoSVG from "../components/SVG/Info";
+import { useSelector, useDispatch } from "react-redux";
+
+function addToCartAction(id) {
+  return { type: "ADD_TO_CART", payload: id };
+}
 
 const ProductScreen = ({ route, navigation }) => {
-  //console.log(navigation, route, "product screens navigation props");
   const [{ isLoading, response, error }, doReaquest] = useProducts();
+  const inCart = useSelector((state) => state.inCart);
+  const dispatch = useDispatch();
+  console.log(inCart, "inCart");
 
   useEffect(() => {
-    //console.log(route.params.productId, "send to request params");
     doReaquest("/" + route.params.productId);
   }, []);
+
+  const onAddToCart = useCallback((id) => dispatch(addToCartAction(id)), [
+    dispatch,
+  ]);
 
   if (!response) return <View></View>;
   return (
@@ -85,7 +95,10 @@ const ProductScreen = ({ route, navigation }) => {
             />
           </View>
           {response.isAvailable ? (
-            <TouchableOpacity style={Style.ProductButton}>
+            <TouchableOpacity
+              style={Style.ProductButton}
+              onPress={() => onAddToCart(response.id)}
+            >
               <CustomText
                 text={"Добавить в корзину"}
                 propsStyle={Style.ProductButtonText}

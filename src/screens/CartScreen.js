@@ -1,14 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { CustomText } from "../components/custom-text/CustomText";
 import { container, colors } from "../../base-style";
 import { visueltProBlack } from "../../contants/fontsConstant";
 import { AntDesign } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
+import useProducts from "../hooks/useProducts";
 
 const CartScreen = ({ navigation }) => {
+  const [{ isLoading, response, error }, doReaquest] = useProducts();
+  const [items, setItems] = useState([]);
+  const inCart = useSelector((state) => state.inCart);
+
   const goToMain = () => {
     navigation.navigate("Home");
   };
+
+  useEffect(() => {
+    if (!inCart.length) return;
+    inCart.forEach((id) => {
+      doReaquest("/" + id);
+    });
+  }, [inCart]);
 
   return (
     <View style={Style.Cart}>
