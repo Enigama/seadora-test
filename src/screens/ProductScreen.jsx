@@ -19,6 +19,8 @@ const ProductScreen = ({ route, navigation }) => {
   const [{ isLoading, response, error }, doReaquest] = useProducts();
   const inCart = useSelector((state) => state.inCart);
   const dispatch = useDispatch();
+  const isProductInCart = inCart.some((id) => id === response.id);
+
   console.log(inCart, "inCart");
 
   useEffect(() => {
@@ -28,6 +30,28 @@ const ProductScreen = ({ route, navigation }) => {
   const onAddToCart = useCallback((id) => dispatch(addToCartAction(id)), [
     dispatch,
   ]);
+
+  const ProductIsDisabled = (
+    <View style={Style.ProductInfo}>
+      <InfoSVG />
+      <CustomText
+        text={"Товар не доступен к предзаказу"}
+        propsStyle={Style.ProductInfoText}
+      />
+    </View>
+  );
+
+  const ButtonAddToCart = (
+    <TouchableOpacity
+      style={Style.ProductButton}
+      onPress={() => onAddToCart(response.id)}
+    >
+      <CustomText
+        text={"Добавить в корзину"}
+        propsStyle={Style.ProductButtonText}
+      />
+    </TouchableOpacity>
+  );
 
   if (!response) return <View></View>;
   return (
@@ -91,25 +115,11 @@ const ProductScreen = ({ route, navigation }) => {
               fontName={visueltProBlack}
             />
           </View>
-          {response.isAvailable ? (
-            <TouchableOpacity
-              style={Style.ProductButton}
-              onPress={() => onAddToCart(response.id)}
-            >
-              <CustomText
-                text={"Добавить в корзину"}
-                propsStyle={Style.ProductButtonText}
-              />
-            </TouchableOpacity>
-          ) : (
-            <View style={Style.ProductInfo}>
-              <InfoSVG />
-              <CustomText
-                text={"Товар не доступен к предзаказу"}
-                propsStyle={Style.ProductInfoText}
-              />
-            </View>
-          )}
+          {response.isAvailable
+            ? isProductInCart
+              ? null
+              : ButtonAddToCart
+            : ProductIsDisabled}
         </View>
       </View>
     </ScrollView>

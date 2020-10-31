@@ -23,7 +23,6 @@ const MainScreen = ({ navigation }) => {
   }, []);
 
   const showMore = (arg) => {
-    //console.log("?page=" + (response.current_page + 1));
     doReaquest("?page=" + (response.current_page + 1));
   };
 

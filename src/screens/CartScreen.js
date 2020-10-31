@@ -22,6 +22,8 @@ const CartScreen = ({ navigation }) => {
   const inCart = useSelector((state) => state.inCart);
   const dispatch = useDispatch();
 
+  console.log(inCart, "inCart");
+  console.log(response, "response");
   console.log(items, "items");
 
   const goToMain = () => {
@@ -33,7 +35,7 @@ const CartScreen = ({ navigation }) => {
   useEffect(() => {
     if (!response) return;
     setItems([...items, response]);
-  }, [response]);
+  }, [response, isLoading]);
 
   useEffect(() => {
     if (!inCart.length) return;
@@ -129,7 +131,6 @@ const Style = StyleSheet.create({
   CartContainer: {
     flex: 1,
     height: "100%",
-    justifyContent: "center",
     alignItems: "center",
     position: "relative",
   },
