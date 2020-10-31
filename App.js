@@ -8,11 +8,16 @@ import { colors } from "./base-style";
 import BasketSVG from "./src/components/SVG/Basket";
 import api from "./api";
 import ProductScreen from "./src/screens/ProductScreen";
+import CartScreen from "./src/screens/CartScreen";
 
 const Stack = createStackNavigator();
 api();
 
 export default function App() {
+  const goToCart = (navigation) => {
+    navigation.navigate("Cart");
+  };
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -30,7 +35,10 @@ export default function App() {
           ),
 
           headerRight: () => (
-            <TouchableOpacity style={Style.headerButtonBasket}>
+            <TouchableOpacity
+              style={Style.headerButtonBasket}
+              onPress={() => goToCart(navigation)}
+            >
               <BasketSVG width={Style.headerBasket.width} />
             </TouchableOpacity>
           ),
@@ -38,6 +46,7 @@ export default function App() {
       >
         <Stack.Screen name="Home" component={MainScreen} />
         <Stack.Screen name="Product" component={ProductScreen} />
+        <Stack.Screen name="Cart" component={CartScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
