@@ -11,6 +11,12 @@ function products(state = INITIAL_STATE, action) {
         inCart: [...state.inCart, action.payload],
       };
 
+    case "REMOVE_FROM_CART":
+      return {
+        ...state,
+        inCart: [...state.inCart.find(({ id }) => id !== action.payload)],
+      };
+
     default:
       return state;
   }

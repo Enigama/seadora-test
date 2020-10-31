@@ -13,10 +13,7 @@ import { visueltProBlack } from "../../contants/fontsConstant";
 import { colors } from "../../base-style";
 import InfoSVG from "../components/SVG/Info";
 import { useSelector, useDispatch } from "react-redux";
-
-function addToCartAction(id) {
-  return { type: "ADD_TO_CART", payload: id };
-}
+import { addToCartAction } from "../../actions/cartActions";
 
 const ProductScreen = ({ route, navigation }) => {
   const [{ isLoading, response, error }, doReaquest] = useProducts();
