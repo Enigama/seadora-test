@@ -32,6 +32,10 @@ const CartScreen = ({ navigation }) => {
     setItems(items.filter((product) => product.id !== id));
   });
 
+  const getTotalPrice = () => {
+    return items.reduce((acc, { price }) => (acc += price), 0);
+  };
+
   useEffect(() => {
     setIsLoading(true);
     const promises = [];
@@ -114,7 +118,7 @@ const CartScreen = ({ navigation }) => {
           ></FlatList>
         ) : (
           <View>
-            <CustomText text={"Empty basket"} />
+            <CustomText text={"Корзина пустая :("} />
           </View>
         )}
       </View>
@@ -123,7 +127,7 @@ const CartScreen = ({ navigation }) => {
         <CustomText text={"Общая тоимость"} fontName={visueltProBlack} />
 
         <View style={Style.CartTotla}>
-          <CustomText text={"3250"} fontName={visueltProBlack} />
+          <CustomText text={getTotalPrice()} fontName={visueltProBlack} />
           <CustomText text={" грн"} fontName={visueltProBlack} />
         </View>
       </View>

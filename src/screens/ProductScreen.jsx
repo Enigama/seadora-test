@@ -110,7 +110,7 @@ const ProductScreen = ({ route, navigation }) => {
 
           <View style={Style.ProductRow}>
             <CustomText
-              text={"~ " + response.price100}
+              text={"~ " + response.price}
               propsStyle={Style.ProductPrice}
               fontName={visueltProBlack}
             />
