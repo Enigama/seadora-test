@@ -10,14 +10,14 @@ export const CustomText = ({ text, fontName, propsStyle }) => {
     VisueltProBlack: require("../../../assets/fonts/VisueltProBlack.ttf"),
   });
 
-  const test = (e) => {
-    console.log(e, "eee");
-  };
+  //const test = (e) => {
+  //console.log(e, "eee");
+  //};
 
   if (!isLoaded) return <ActivityIndicator />;
   return (
+    //onLayout={(e) => test(e)}
     <Text
-      onLayout={(e) => test(e)}
       style={[{ fontSize: 16 }, { fontFamily: fontName || base }, propsStyle]}
     >
       {text}

@@ -1,89 +1,119 @@
-import React, { useEffect } from "react";
-import { View, Text, StyleSheet, ScrollView, Image } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Dimensions,
+} from "react-native";
 import useProducts from "../hooks/useProducts";
 import axios from "axios";
 import { CustomText } from "../components/custom-text/CustomText";
 import { InterBold, visueltProBlack } from "../../contants/fontsConstant";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { colors } from "../../base-style";
+import { API_URL_PRODUCTS } from "../../contants/requestContstant";
 
 const MainScreen = () => {
-  const [{ isLoading, response, error }, doReaquest] = useProducts();
+  const [{ isLoading, response, items, error }, doReaquest] = useProducts();
 
   useEffect(() => {
-    console.log("start request");
     doReaquest();
-    //console.log(response);
-    //axios.get("https://dev2.seadora.com.ua/api/v1/products").then((res) => {
-    //console.log(res, "res server");
-    //});
   }, []);
 
+  const showMore = (arg) => {
+    //console.log("?page=" + (response.current_page + 1));
+    doReaquest("?page=" + (response.current_page + 1));
+  };
+
   return (
-    <ScrollView>
+    <ScrollView style={Style.Product}>
       <CustomText
         text={"Каталог"}
-        style={Style.Title}
+        propsStyle={Style.Title}
         fontName={visueltProBlack}
       />
-      <View style={Style.Products}>
-        {response
-          ? response.items.map((item, index) => {
-              return (
-                <View
-                  style={[Style.ProductItem, index !== 0 && { marginTop: 24 }]}
-                  key={item.id}
-                >
-                  <Image
-                    style={Style.ProductImage}
-                    source={{ uri: item.img }}
-                  />
-                  <View style={Style.ProductFooter}>
-                    <Text style={[Style.ProductName]}>{item.name}</Text>
-                    <View style={Style.ProductTextWrapper}>
-                      <CustomText
-                        text={item.price100}
-                        propsStyle={Style.ProductPrice}
-                        fontName={visueltProBlack}
+      {response ? (
+        <View>
+          <View style={Style.Products}>
+            {items.length
+              ? items.map((item, index) => {
+                  return (
+                    <View style={[Style.ProductItem]} key={item.id}>
+                      <Image
+                        style={Style.ProductImage}
+                        source={{ uri: item.img }}
                       />
-                      <CustomText
-                        text={" грн."}
-                        propsStyle={Style.ProductCurrency}
-                        fontName={visueltProBlack}
-                      />
-                      <CustomText
-                        text={" (100 г)"}
-                        propsStyle={Style.ProductWeight}
-                      />
+                      <View style={Style.ProductFooter}>
+                        <Text style={[Style.ProductName]}>{item.name}</Text>
+                        <View style={Style.ProductTextWrapper}>
+                          <CustomText
+                            text={item.price100}
+                            propsStyle={Style.ProductPrice}
+                            fontName={visueltProBlack}
+                          />
+                          <CustomText
+                            text={" грн."}
+                            propsStyle={Style.ProductCurrency}
+                            fontName={visueltProBlack}
+                          />
+                          <CustomText
+                            text={" (100 г)"}
+                            propsStyle={Style.ProductWeight}
+                          />
+                        </View>
+                        <TouchableOpacity style={Style.ProductButton}>
+                          <CustomText
+                            text={"Заказать"}
+                            propsStyle={Style.ProductButtonText}
+                          />
+                        </TouchableOpacity>
+                      </View>
                     </View>
-                    <TouchableOpacity style={Style.ProductButton}>
-                      <CustomText
-                        text={"Заказать"}
-                        propsStyle={Style.ProductButtonText}
-                      />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              );
-            })
-          : null}
-      </View>
+                  );
+                })
+              : null}
+          </View>
+
+          {response.current_page !== response.last_page ? (
+            <View style={Style.ButtonWrapper}>
+              <TouchableOpacity
+                style={Style.ButtonMore}
+                onPress={() => showMore()}
+              >
+                <CustomText
+                  text={"Показать еще"}
+                  propsStyle={Style.ButtonText}
+                />
+              </TouchableOpacity>
+            </View>
+          ) : null}
+        </View>
+      ) : null}
     </ScrollView>
   );
 };
 
 const Style = StyleSheet.create({
+  Product: {
+    paddingHorizontal: 24,
+  },
   Title: {
+    marginTop: 25,
     marginBottom: 18,
-    paddingLeft: 24,
     fontSize: 24,
+    lineHeight: 24,
   },
   Products: {
     justifyContent: "center",
     alignItems: "center",
   },
+  ProductItem: {
+    marginBottom: 24,
+  },
   ProductImage: {
-    width: 312,
+    width: Dimensions.get("window").width - 48,
     height: 208,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
@@ -107,7 +137,7 @@ const Style = StyleSheet.create({
   ProductTextWrapper: {
     flexDirection: "row",
     justifyContent: "center",
-    alignItems: "flex-end",
+    alignItems: "baseline",
     marginBottom: 19,
   },
   ProductPrice: {
@@ -123,6 +153,28 @@ const Style = StyleSheet.create({
   ProductButtonText: {
     textAlign: "center",
     color: "#fff",
+  },
+  ButtonWrapper: {
+    //marginTop: 24,
+    marginBottom: 32,
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  ButtonMore: {
+    width: 200,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderRadius: 8,
+    borderTopColor: colors.theme,
+    borderLeftColor: colors.theme,
+    borderBottomColor: colors.theme,
+    borderRightColor: colors.theme,
+  },
+  ButtonText: {
+    color: colors.theme,
   },
 });
 

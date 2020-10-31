@@ -2,26 +2,29 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL_PRODUCTS } from "../../contants/requestContstant";
 
-export default (url = "") => {
+export default () => {
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState(null);
+  const [items, setItems] = useState([]);
   const [error, setError] = useState(null);
+  const [url, setUrl] = useState("");
   const [options, setOptions] = useState({});
 
-  const doReaquest = (options = {}) => {
+  const doReaquest = (url = "", options = {}) => {
     setOptions(options);
+    setUrl(url);
     setIsLoading(true);
   };
 
   useEffect(() => {
     if (!isLoading) return;
 
-    console.log(API_URL_PRODUCTS + url, options);
     axios
       .get(API_URL_PRODUCTS + url, options)
       .then(({ data }) => {
         setIsLoading(false);
         setResponse(data.data);
+        setItems([...items, ...data.data.items]);
       })
       .catch((err) => {
         isLoading(false);
@@ -29,5 +32,5 @@ export default (url = "") => {
       });
   }, [isLoading, options, url]);
 
-  return [{ isLoading, response, error }, doReaquest];
+  return [{ isLoading, response, items, error }, doReaquest];
 };

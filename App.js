@@ -9,8 +9,6 @@ import BasketSVG from "./src/components/SVG/Basket";
 import api from "./api";
 
 const Stack = createStackNavigator();
-console.log(colors.theme, "theme color");
-
 api();
 
 export default function App() {
