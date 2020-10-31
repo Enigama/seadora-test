@@ -20,7 +20,6 @@ const ProductScreen = ({ route, navigation }) => {
   const [isProductInCart, setisProductInCart] = useState(false);
   const inCart = useSelector((state) => state.inCart);
   const dispatch = useDispatch();
-  console.log(inCart);
 
   useEffect(() => {
     doReaquest("/" + route.params.productId);
@@ -28,8 +27,8 @@ const ProductScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     if (!response) return;
-    console.log("check in cart", response.id);
     setisProductInCart(inCart.some(({ id }) => id === response.id));
+
     return () => setisProductInCart(false);
   }, [response, inCart]);
 

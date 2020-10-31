@@ -23,7 +23,6 @@ export default () => {
     axios
       .get(API_URL_PRODUCTS + url, options)
       .then(({ data }) => {
-        console.log("useProducts data", data.data);
         setIsLoading(false);
         setResponse(data.data);
         if (data.data.items) {

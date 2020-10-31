@@ -11,20 +11,40 @@ import ProductScreen from "./src/screens/ProductScreen";
 import CartScreen from "./src/screens/CartScreen";
 import { Provider } from "react-redux";
 import store from "./store";
+import { CustomText } from "./src/components/custom-text/CustomText";
+import { useSelector } from "react-redux";
 
 const Stack = createStackNavigator();
 api();
 
-export default function App() {
+const Basket = ({ route, navigation }) => {
+  const inCart = useSelector((state) => state.inCart);
+
   const goToCart = (navigation) => {
     navigation.navigate("Cart");
   };
 
   return (
+    <TouchableOpacity
+      style={Style.headerButtonBasket}
+      onPress={() => goToCart(navigation)}
+    >
+      <BasketSVG width={Style.headerBasket.width} />
+      {inCart.length ? (
+        <View style={Style.cartCount}>
+          <CustomText text={inCart.length} propsStyle={Style.cartText} />
+        </View>
+      ) : null}
+    </TouchableOpacity>
+  );
+};
+
+export default function App() {
+  return (
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          screenOptions={({ navigation }) => ({
+          screenOptions={({ route, navigation }) => ({
             cardStyle: Style.PagesBcakground,
             headerStyle: Style.header,
             headerLeft: () => <TouchableOpacity></TouchableOpacity>,
@@ -37,13 +57,8 @@ export default function App() {
               </TouchableOpacity>
             ),
 
-            headerRight: () => (
-              <TouchableOpacity
-                style={Style.headerButtonBasket}
-                onPress={() => goToCart(navigation)}
-              >
-                <BasketSVG width={Style.headerBasket.width} />
-              </TouchableOpacity>
+            headerRight: (e) => (
+              <Basket route={route} navigation={navigation} />
             ),
           })}
         >
@@ -73,7 +88,23 @@ const Style = StyleSheet.create({
     width: 18,
   },
   headerButtonBasket: {
+    position: "relative",
     paddingVertical: 6,
     paddingHorizontal: 24,
+  },
+  cartCount: {
+    position: "absolute",
+    top: -3,
+    right: 12,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 18,
+    height: 18,
+    borderRadius: 10,
+    backgroundColor: colors.peach,
+  },
+  cartText: {
+    fontSize: 12,
+    color: "#fff",
   },
 });

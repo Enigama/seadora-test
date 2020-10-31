@@ -12,10 +12,9 @@ function products(state = INITIAL_STATE, action) {
       };
 
     case "REMOVE_FROM_CART":
-      console.log(state.inCart, "STORE");
       return {
         ...state,
-        inCart: [...state.inCart.filter((id) => id !== action.payload)],
+        inCart: [...state.inCart.filter(({ id }) => id !== action.payload)],
       };
 
     default:
