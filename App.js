@@ -7,6 +7,7 @@ import LogoSVG from "./src/components/SVG/Logo";
 import { colors } from "./base-style";
 import BasketSVG from "./src/components/SVG/Basket";
 import api from "./api";
+import ProductScreen from "./src/screens/ProductScreen";
 
 const Stack = createStackNavigator();
 api();
@@ -16,7 +17,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={({ navigation }) => ({
-          cardStyle: Style.PagesPhone,
+          cardStyle: Style.PagesBcakground,
           headerStyle: Style.header,
           headerLeft: () => <TouchableOpacity></TouchableOpacity>,
           headerTitle: () => (
@@ -36,14 +37,15 @@ export default function App() {
         })}
       >
         <Stack.Screen name="Home" component={MainScreen} />
+        <Stack.Screen name="Product" component={ProductScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
 
 const Style = StyleSheet.create({
-  PagesPhone: {
-    backgroundColor: "#f5f5f5",
+  PagesBcakground: {
+    backgroundColor: "#fff",
   },
   container: {
     flex: 1,

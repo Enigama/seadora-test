@@ -19,12 +19,15 @@ export default () => {
   useEffect(() => {
     if (!isLoading) return;
 
+    //console.log("request url", API_URL_PRODUCTS + url);
     axios
       .get(API_URL_PRODUCTS + url, options)
       .then(({ data }) => {
         setIsLoading(false);
         setResponse(data.data);
-        setItems([...items, ...data.data.items]);
+        if (data.data.items) {
+          setItems([...items, ...data.data.items]);
+        }
       })
       .catch((err) => {
         isLoading(false);

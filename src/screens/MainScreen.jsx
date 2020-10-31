@@ -15,7 +15,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { colors } from "../../base-style";
 import { API_URL_PRODUCTS } from "../../contants/requestContstant";
 
-const MainScreen = () => {
+const MainScreen = ({ navigation }) => {
   const [{ isLoading, response, items, error }, doReaquest] = useProducts();
 
   useEffect(() => {
@@ -25,6 +25,12 @@ const MainScreen = () => {
   const showMore = (arg) => {
     //console.log("?page=" + (response.current_page + 1));
     doReaquest("?page=" + (response.current_page + 1));
+  };
+
+  const goToProduct = (id) => {
+    navigation.navigate("Product", {
+      productId: id,
+    });
   };
 
   return (
@@ -63,7 +69,10 @@ const MainScreen = () => {
                             propsStyle={Style.ProductWeight}
                           />
                         </View>
-                        <TouchableOpacity style={Style.ProductButton}>
+                        <TouchableOpacity
+                          onPress={() => goToProduct(item.id)}
+                          style={Style.ProductButton}
+                        >
                           <CustomText
                             text={"Заказать"}
                             propsStyle={Style.ProductButtonText}
@@ -143,7 +152,9 @@ const Style = StyleSheet.create({
   ProductPrice: {
     fontSize: 24,
   },
-  ProductCurrency: {},
+  ProductCurrency: {
+    lineHeight: 24,
+  },
   ProductWeight: {},
   ProductButton: {
     borderRadius: 8,
