@@ -32,9 +32,13 @@ const ProductScreen = ({ route, navigation }) => {
     return () => setisProductInCart(false);
   }, [response, inCart]);
 
-  const onAddToCart = useCallback((id) => dispatch(addToCartAction({ id })), [
-    dispatch,
-  ]);
+  const onAddToCart = useCallback(
+    (id) => {
+      navigation.navigate("Cart");
+      dispatch(addToCartAction({ id }));
+    },
+    [dispatch]
+  );
 
   const ProductIsDisabled = (
     <View style={Style.ProductInfo}>
