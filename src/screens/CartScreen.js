@@ -15,34 +15,50 @@ import { AntDesign, EvilIcons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import useProducts from "../hooks/useProducts";
 import { removeFromCartAction } from "../../actions/cartActions";
+import { API_URL_PRODUCTS } from "../../contants/requestContstant";
+import axios from "axios";
 
 const CartScreen = ({ navigation }) => {
-  const [{ isLoading, response, error }, doReaquest] = useProducts();
+  //const [{ isLoading, response, error }, doReaquest] = useProducts();
+  const [isLoading, setIsLoading] = useState(false);
   const [items, setItems] = useState([]);
   const inCart = useSelector((state) => state.inCart);
   const dispatch = useDispatch();
-
-  console.log(inCart, "inCart");
-  console.log(response, "response");
-  console.log(items, "items");
+  console.log(inCart, isLoading, items.length);
+  //console.log(inCart, "items in cart", items);
 
   const goToMain = () => {
     navigation.navigate("Home");
   };
 
-  const removeProduct = useCallback((id) => dispatch(removeFromCartAction(id)));
+  const removeProduct = useCallback((id) => {
+    console.log(id, "remove id");
+    //console.log("dispatch delite", id);
+    dispatch(removeFromCartAction(id), [dispatch]);
+    setItems(items.filter((product) => product.id !== id));
+  });
 
   useEffect(() => {
-    if (!response) return;
-    setItems([...items, response]);
-  }, [response, isLoading]);
-
-  useEffect(() => {
-    if (!inCart.length) return;
-    inCart.forEach((id) => {
-      doReaquest("/" + id);
+    setIsLoading(true);
+    //console.log("request when inCart change");
+    const promises = [];
+    inCart.forEach(({ id }) => {
+      //console.log("send request with id:", id);
+      //doReaquest("/" + id);
+      promises.push(axios.get(API_URL_PRODUCTS + "/" + id));
     });
-  }, [inCart]);
+
+    Promise.all(promises)
+      .then((res) => {
+        console.log(res, "value from server");
+        res.forEach(({ data }) => setItems((prev) => [...prev, data.data]));
+        //setItems([...items, data.data]);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+      });
+  }, []);
 
   return (
     <View style={Style.Cart}>
@@ -56,12 +72,14 @@ const CartScreen = ({ navigation }) => {
           fontName={visueltProBlack}
         />
 
-        {items.length ? (
+        {!isLoading && items.length ? (
           <FlatList
             style={{ width: "100%" }}
             data={items}
+            keyExtractor={(item) => item.name}
             renderItem={(product) => {
               const { item, index } = product;
+              console.log(item.id, "flat list");
               return (
                 <View
                   style={[
@@ -104,9 +122,12 @@ const CartScreen = ({ navigation }) => {
                 </View>
               );
             }}
-            keyExtractor={(item) => toString(item.id)}
           ></FlatList>
-        ) : null}
+        ) : (
+          <View>
+            <CustomText text={"Empty basket"} />
+          </View>
+        )}
       </View>
 
       <View style={Style.CartFooter}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import {
   View,
   Image,
@@ -17,17 +17,23 @@ import { addToCartAction } from "../../actions/cartActions";
 
 const ProductScreen = ({ route, navigation }) => {
   const [{ isLoading, response, error }, doReaquest] = useProducts();
+  const [isProductInCart, setisProductInCart] = useState(false);
   const inCart = useSelector((state) => state.inCart);
   const dispatch = useDispatch();
-  const isProductInCart = inCart.some((id) => id === response.id);
-
-  console.log(inCart, "inCart");
+  console.log(inCart);
 
   useEffect(() => {
     doReaquest("/" + route.params.productId);
   }, []);
 
-  const onAddToCart = useCallback((id) => dispatch(addToCartAction(id)), [
+  useEffect(() => {
+    if (!response) return;
+    console.log("check in cart", response.id);
+    setisProductInCart(inCart.some(({ id }) => id === response.id));
+    return () => setisProductInCart(false);
+  }, [response, inCart]);
+
+  const onAddToCart = useCallback((id) => dispatch(addToCartAction({ id })), [
     dispatch,
   ]);
 
