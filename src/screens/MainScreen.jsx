@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -8,26 +8,25 @@ import {
   Dimensions,
 } from "react-native";
 import useProducts from "../hooks/useProducts";
-import axios from "axios";
 import { CustomText } from "../components/custom-text/CustomText";
-import { InterBold, visueltProBlack } from "../../contants/fontsConstant";
+import { visueltProBlack } from "../../constants/fontsConstant";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { colors } from "../../base-style";
-import { API_URL_PRODUCTS } from "../../contants/requestContstant";
+import { Product } from "../../constants/screensConstant";
 
 const MainScreen = ({ navigation }) => {
-  const [{ isLoading, response, items, error }, doReaquest] = useProducts();
+  const [{ response, items }, doReaquest] = useProducts();
 
   useEffect(() => {
     doReaquest();
   }, []);
 
-  const showMore = (arg) => {
+  const showMore = () => {
     doReaquest("?page=" + (response.current_page + 1));
   };
 
   const goToProduct = (id) => {
-    navigation.navigate("Product", {
+    navigation.navigate(Product, {
       productId: id,
     });
   };
@@ -43,7 +42,7 @@ const MainScreen = ({ navigation }) => {
         <View>
           <View style={Style.Products}>
             {items.length
-              ? items.map((item, index) => {
+              ? items.map((item) => {
                   return (
                     <View style={[Style.ProductItem]} key={item.id}>
                       <Image

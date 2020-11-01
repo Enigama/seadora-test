@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { API_URL_PRODUCTS } from "../../contants/requestContstant";
+import { API_URL_PRODUCTS } from "../../constants/requestConstant";
 
 export default () => {
   const [isLoading, setIsLoading] = useState(false);

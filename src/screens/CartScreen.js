@@ -3,19 +3,18 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
   FlatList,
   Image,
-  TouchableOpacityBase,
 } from "react-native";
 import { CustomText } from "../components/custom-text/CustomText";
 import { container, colors } from "../../base-style";
-import { visueltProBlack } from "../../contants/fontsConstant";
+import { visueltProBlack } from "../../constants/fontsConstant";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { removeFromCartAction } from "../../actions/cartActions";
-import { API_URL_PRODUCTS } from "../../contants/requestContstant";
+import { API_URL_PRODUCTS } from "../../constants/requestConstant";
 import axios from "axios";
+import { Main } from "../../constants/screensConstant";
 
 const CartScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +23,7 @@ const CartScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   const goToMain = () => {
-    navigation.navigate("Home");
+    navigation.navigate(Main);
   };
 
   const removeProduct = useCallback((id) => {

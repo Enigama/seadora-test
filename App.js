@@ -13,6 +13,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 import { CustomText } from "./src/components/custom-text/CustomText";
 import { useSelector } from "react-redux";
+import { Main, Product, Cart } from "./constants/screensConstant";
 
 const Stack = createStackNavigator();
 api();
@@ -21,7 +22,7 @@ const Basket = ({ route, navigation }) => {
   const inCart = useSelector((state) => state.inCart);
 
   const goToCart = (navigation) => {
-    navigation.navigate("Cart");
+    navigation.navigate(Cart);
   };
 
   return (
@@ -51,7 +52,7 @@ export default function App() {
             headerTitle: () => (
               <TouchableOpacity
                 style={Style.headerTitle}
-                onPress={() => navigation.navigate("Home")}
+                onPress={() => navigation.navigate(Main)}
               >
                 <LogoSVG width={47} />
               </TouchableOpacity>
@@ -62,9 +63,9 @@ export default function App() {
             ),
           })}
         >
-          <Stack.Screen name="Home" component={MainScreen} />
-          <Stack.Screen name="Product" component={ProductScreen} />
-          <Stack.Screen name="Cart" component={CartScreen} />
+          <Stack.Screen name={Main} component={MainScreen} />
+          <Stack.Screen name={Product} component={ProductScreen} />
+          <Stack.Screen name={Cart} component={CartScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </Provider>

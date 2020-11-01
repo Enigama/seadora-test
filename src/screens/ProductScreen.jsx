@@ -9,14 +9,14 @@ import {
 } from "react-native";
 import { CustomText } from "../components/custom-text/CustomText";
 import useProducts from "../hooks/useProducts";
-import { visueltProBlack } from "../../contants/fontsConstant";
+import { visueltProBlack } from "../../constants/fontsConstant";
 import { colors } from "../../base-style";
 import InfoSVG from "../components/SVG/Info";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCartAction } from "../../actions/cartActions";
 
 const ProductScreen = ({ route, navigation }) => {
-  const [{ isLoading, response, error }, doReaquest] = useProducts();
+  const [{ response }, doReaquest] = useProducts();
   const [isProductInCart, setisProductInCart] = useState(false);
   const inCart = useSelector((state) => state.inCart);
   const dispatch = useDispatch();
